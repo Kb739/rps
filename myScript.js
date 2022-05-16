@@ -1,46 +1,107 @@
-let options = ['rock', 'paper', 'scissors'];
+const options = ['rock', 'paper', 'scissors'];
+const maxRounds = 5;
+let round = 0;
+let gameover = false;
+let playerScore = 0,
+    computerScore = 0;
 
-game(3);
+// acquire references 
+const playerColumn = document.querySelector('#first');
+const scoreColumn = document.querySelector('#second');
+const cpuColumn = document.querySelector('#third');
+const footer = document.querySelector('footer>h1');
+const table = document.querySelector('#content');
+//
 
-function game(rounds = 5) {
+const buttons = document.querySelectorAll('button');
+buttons.forEach((btn) => btn.addEventListener('click', battle));
 
-    console.assert(rounds & 1, "rounds cannot be even");
+function battle(e) {
+    reset();
+    if (round++ < maxRounds) {
+        const result = playRound(playerPlay(e), computerPlay());
 
-    let playerScore = 0,
-        computerScore = 0;
+        let entry_left = 0,
+            entry_right = 0;
 
-    for (let i = 0; i < rounds; i++) {
-        playRound(playerPlay(), computerPlay()) ? playerScore++ : computerScore++;
-        console.log(`Player = ${playerScore} , Computer = ${computerScore}`);
+        if (result != null) {
+            if (result) {
+                playerScore++;
+                entry_left = 1;
+            }
+            else {
+                computerScore++;
+                entry_right = 1;
+            }
+        }
+
+        let node = document.createElement('li');
+        node.textContent = `${entry_left} ---- ${entry_right}`;
+        scoreColumn.appendChild(node);
     }
-    playerScore > computerScore ? alert("you win") : alert("you loose");
+    else {
+        announceWinner();
+        gameover = true;
+    }
 }
 
 function playRound(playerSelection, computerSelection) {
-    //returns true if player wins the round , false otherwise
-
-    const indexOfPlayer = options.indexOf(playerSelection);
-    const indexOfComputer = options.indexOf(computerSelection);
+    //returns null for draw and true if player wins the round , false otherwise
     const len = options.length;
-    return (indexOfPlayer + 1) % len == indexOfComputer ? false : true;
+    if (computerSelection == playerSelection)//for draw
+        return null;
+    return (playerSelection + 1) % len == computerSelection ? false : true;
 }
 
-function playerPlay() {
-    //prompts player to enter choice ,loops until valid choice is found
-
-    let choice = prompt("Enter choice");
-    if (!choice) {
-        alert("invalid input");
-        playerPlay();
+function playerPlay(e) {
+    const buttonPressed = e.target.id;
+    let choice = 0;
+    switch (buttonPressed) {
+        case 'rock': choice = 0; break;
+        case 'paper': choice = 1; break;
+        case 'scissor': choice = 2; break;
     }
-    choice = options.find((value) => value == choice.toLowerCase()) || playerPlay();
-
+    let node = document.createElement('li');
+    node.textContent = `${options[choice]} `;
+    playerColumn.appendChild(node);
     return choice;
 }
 
 function computerPlay() {
     //computer selects random value from the options array
-
     const index = Math.floor(Math.random() * 3);
-    return options[index];
+    let node = document.createElement('li');
+    node.textContent = `${options[index]} `;
+    cpuColumn.appendChild(node);
+    return index;
 }
+
+function announceWinner() {
+    footer.textContent = playerScore > computerScore ? "You Win" :
+        playerScore == computerScore ? "Its a Draw" : "You Lose";
+}
+
+function reset() {
+    if (gameover) {
+
+        gameover = false;
+        round = 0;
+        playerScore = 0,
+            computerScore = 0;
+
+        //delete all appended nodes for rematch
+        const listNode = document.querySelectorAll('#content>ul>li');
+        listNode.forEach((node) => node.remove());
+        footer.textContent = '';
+    }
+    else 
+    {
+        let style=window.getComputedStyle(table);
+        if(style.getPropertyValue('visibility')=='hidden')
+                table.style.visibility='visible';
+    }
+
+
+}
+
+

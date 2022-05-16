@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title> game</title>
-        <script src="myScript.js"></script>
-    </head>
-    <body>
-        <h2>rock paper scissors ...console </h2>
-    </body>
-    </html>
+
+<head>
+    <title> game</title>
+    <style>
+        header, footer{
+            text-align: center;
+        }
+        #choice {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #content {
+            display: flex;
+            justify-content: space-between;
+            padding:100px;
+            height:200px;
+            visibility:hidden;
+        }
+        #content ul{
+            text-align:center;
+            list-style: none;
+            padding:0;
+        }
+    </style>
+</head>
+
+<body>
+    <header><h1>Game of Death</h1></header>
+    <div id=choice>
+        <h3>pick one</h3>
+        <div id=options>
+            <button>rock</button>
+            <button>paper</button>
+            <button>scissors</button>
+        </div>
+    </div>
+    <div id="content">
+        <ul id="first">
+            <h3>YOU</h3>
+        </ul>
+        <ul id="second">
+            <h3>Score</h3>
+        </ul>
+        <ul id="third">
+            <h3>CPU</h3>
+        </ul>
+    </div>
+    <footer>
+    </footer>
+
+</body>
+<!-- <script src="myScript.js"></script> -->
+
+</html>
